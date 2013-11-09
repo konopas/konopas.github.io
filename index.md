@@ -12,6 +12,7 @@ You might also be interested in the [project mailing list](https://groups.google
 We also have a working document for the [JSON data schemes](https://github.com/eemeli/konopas/wiki/JSON-data-schemes).
 
 KonOpas has been used so far at:
+
 * [Capclave 2013](http://www.capclave.org/capclave/capclave13/konopas/)
 * [Octocon 2013](http://www.octocon.com/app/)
 * [Fantastika 2013](http://fantastika2013.myconferenceplanning.org/guide/)
