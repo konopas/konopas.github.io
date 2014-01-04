@@ -9,7 +9,7 @@ The latest release is **[0.5.0](https://github.com/eemeli/konopas/releases/tag/0
 
 You might also be interested in the [project mailing list](https://groups.google.com/forum/#!forum/konopas-dev), which you're welcome to join.
 
-We're hosting here the working document for the [JSON data schemes](/data-fmt/).
+We're hosting here the working document for the [JSON data schemes](/data-fmt).
 
 KonOpas has been used so far at:
 
