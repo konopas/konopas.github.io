@@ -1,0 +1,13 @@
+---
+layout: default
+title: 404 Not Found
+---
+
+<h2>404 Not Found</h2>
+
+<p>The page you're looking for isn't here.
+
+<script>
+	var t = /^(.*)(\.html?|\/)$/.exec(document.location.pathname);
+	if (t) document.location = t[1];
+</script>
