@@ -1,13 +1,13 @@
 ---
 layout: default
-title: KonOpas data schemes
+title: Data formats
 ---
 
-This is a document for developing the data structures to be used with KonOpas, i.e. the format for the JSONP-formatted files that make up the programme database.
+This is a document defining the data structures to be used with KonOpas, i.e. the format for the JSONP-formatted files that make up the programme database. These file(s) will be included with `<script>` tags, and will need to define up to three variables: `program` (necessary), `people` (optional), and `updates` (not yet implemented).
 
 This is a work in progress, so stuff may still change at any time.
 
-## program.js
+<br>
 
 {% highlight javascript %}
 var program = [
@@ -51,7 +51,7 @@ We should avoid complications related to programme items that go on past midnigh
 
 At least "desc" for program.js and "bio" for people.js need to support HTML tags, which may not be supported elsewhere (though they'll probably be fine).
 
-## people.js
+<br>
 
 {% highlight javascript %}
 var people = [
@@ -93,7 +93,7 @@ var people = [
 
 The possible fields of "links" should not be predetermined.
 
-## updates.js
+<br>
 
 {% highlight javascript %}
 var updates =  {
@@ -123,7 +123,6 @@ var updates =  {
 			],
 			"desc": ""
 		}
-
 	},
 	"people": {
 		"4567": { },
