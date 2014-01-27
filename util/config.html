@@ -1,39 +1,42 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta charset="utf-8">
-<title>KonOpas Configurator</title>
-
-<body>
-
-<style>
-.filters { white-space: pre-wrap; }
-#reset, #result, #results { display: none; }
-.config-results #reset, .config-results #results { display: block; }
-.config-results form { display: none; }
-</style>
+---
+layout: default
+title: KonOpas Configurator
+---
 
 <h1>KonOpas Configurator</h1>
 
+<style>
+tt { white-space: nowrap; }
+.filters { white-space: pre-wrap; }
+#results { display: none; }
+.config-results #results { display: block; }
+</style>
+
 <form id="form">
-<p>Please enter the URL for the file containing your <kbd> var program = [...];</kbd> definition:</p>
-<input type="text" id="url0" size="80" placeholder="http://..."><br>
-<input type="submit" value="Generate sample HTML for filters">
+<p>Please enter the URL for the file containing your <tt>var people = [...];</tt> and/or <tt>var program = [...];</tt> definitions:<br>
+<input type="text" id="url0" size="80" placeholder="http://...">
+<input type="submit" value="Read">
+
+<p>Roughly how many names per screenful of people?
+<input type="text" id="name_bin" size="3" placeholder="60">
+
+<p>Any special tag prefixes?
+<input type="text" id="tag_titles" size="20" placeholder="e.g. track, type, ...">
+
 </form>
 
-<input type="button" id="reset" value="Reset">
-
 <div id="results">
-<h3>Initial filters to use for your <i>Program</i> view:</h3>
-<pre id="program-filters" class="filters">Loading...</pre>
-
-<h3>Initial filters to use for your <i>People</i> view:</h3>
+<hr>
+<h2>Initial filters to use for your <i>People</i> view:</h2>
 <pre id="people-filters" class="filters">Loading...</pre>
+
+<hr>
+<h2>Initial filters to use for your <i>Program</i> view:</h2>
+<pre id="program-filters" class="filters">Loading...</pre>
 </div>
 
 <script>
 var program = false, people = false;
-
 
 function unique(value, index, self) { return self.indexOf(value) === index; }
 function weekday(t) { return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][t.getDay()]; }
@@ -68,11 +71,13 @@ function parse_program() {
 
 	var tags = [].concat.apply([], program.map(function(p) { return p.tags || []; })).filter(unique);
 	if (tags.length) {
+		var tt_str = document.getElementById('tag_titles').value;
+		var tt_re = tt_str && (new RegExp(tt_str.trim().replace(/[, ]+/g, '|').replace(/:?(?=$|\|)/g, ':'), 'g'));
 		tags.sort();
 		r.push('');
 		r.push('<ul id="tag">');
 		r.push('<li id="all_tags">All tags');
-		r = r.concat.apply(r, tags.map(function(t) { return '<li id="' + t + '">' + t; }));
+		r = r.concat.apply(r, tags.map(function(t) { return '<li id="' + t + '">' + (tt_re ? t.replace(tt_re, '') : t); }));
 		r.push('</ul>');
 	}
 
@@ -108,8 +113,7 @@ function letter_ranges(a, bin_size) {
 
 function parse_people() {
 	if (!people || !people.length) return null;
-	var r = [], bin_size = 60;
-
+	var r = [], bin_size = Number(document.getElementById('name_bin').value) || 60;
 	var fn = people
 		.filter(function(p){ return p.name && (p.name.length >= 1) && p.name[0].trim && p.name[0].trim(); })
 		.map(function(p){ return p.name[0].trim().charAt(0); });
@@ -151,6 +155,10 @@ function parse_people() {
 	return r.join('\n');
 }
 
+function print_filters() {
+	document.getElementById('program-filters').textContent = parse_program() || '[No program data found]';
+	document.getElementById('people-filters').textContent = parse_people() || '[No people data found]';
+}
 
 function load_script(url) {
 	var script = document.createElement('script');
@@ -163,8 +171,7 @@ function load_script(url) {
 			script.onload = script.onreadystatechange = null;
 			if (script && script.parentNode) { script.parentNode.removeChild(script); }
 
-			document.getElementById('program-filters').textContent = parse_program() || '[No program data found]';
-			document.getElementById('people-filters').textContent = parse_people() || '[No people data found]';
+			print_filters();
 		}
 	};
 	document.getElementsByTagName('head')[0].appendChild(script);
@@ -176,8 +183,8 @@ document.getElementById('form').onsubmit = function(ev) {
 	(ev || window.event).preventDefault();
 };
 
-document.getElementById('reset').onclick = function() { document.location.hash = ''; };
-
+document.getElementById('tag_titles').onchange = print_filters;
+document.getElementById('name_bin').onchange = print_filters;
 
 function init() {
 	if (document.location.hash.length > 1) {
