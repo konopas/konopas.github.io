@@ -1,14 +1,10 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<script src="/site.js"></script>
-<title>CSV2JSON</title>
+---
+layout: default
+title: CSV to JSON(P) converter
+---
 
-<body>
 <h1>CSV to JSON(P) converter</h1>
-<p style="width:45em">Input should be a CSV formatted file, with field names on the first row. Result will be a JSON array of objects, optionally wrapped as a JavaScript variable.
-<p style="width:45em">Uses FileReader, FileSaver and Blob interface from the HTML5 File API, so may not work on all browsers.
+<p>Input should be a CSV formatted file, with field names on the first row. Result will be a JSON array of objects, optionally wrapped as a JavaScript variable.
 
 <p>
 <input type="file" id="file">
@@ -23,6 +19,8 @@
 <script src="lib/jquery.csv-0.71.min.js"></script>
 <script src="lib/FileSaver.min.js"></script>
 <script>
+
+if (!FileReader || !$.csv) alert("This tool uses JavaScript features that don't appear to be supported by your browser. Please try a different browser.");
 
 var data = null, str_out = '';
 
@@ -99,7 +97,7 @@ $('input').on('change', function() {
 	}
 });
 
-$('#download').on('click', function() {
+if (Blob && saveAs) $('#download').on('click', function() {
 	if (!str_out) { alert('Nothing to save!'); return; }
 	var f_type, f_name;
 	if ($('#jsonp').is(':checked')) {
@@ -111,6 +109,6 @@ $('#download').on('click', function() {
 	}
 	var blob = new Blob([str_out], {type: f_type + ';charset=utf-8'});
 	saveAs(blob, var_name() + f_ext);
-});
+}); else $('#download').css('display', 'none');
 
 </script>

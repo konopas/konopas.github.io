@@ -1,18 +1,14 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta charset="utf-8">
-<script src="/site.js"></script>
-<title>JSONP updates</title>
-
-<body>
+---
+layout: default
+title: JSONP updates
+---
 
 <h1>JSONP updates</h1>
 
-<p style="width:45em">This tool takes as input Javascript files that define variables such as <tt style="white-space:nowrap">var program = ...;</tt> and <tt style="white-space:nowrap">var people = ...;</tt> and generates an <tt>updates</tt> changeset, as specified by the <a href="http://konopas.org/data-fmt">KonOpas data format</a>.
+<p>This tool takes as input Javascript files that define variables such as <tt style="white-space:nowrap">var program = ...;</tt> and <tt style="white-space:nowrap">var people = ...;</tt> and generates an <tt>updates</tt> changeset, as specified by the <a href="/data-fmt">KonOpas data format</a>.
 
 <form>
-<table style="width:45em">
+<table width="100%">
 <tr><td align="right" valign="top" style="width:3em">From: <td>
 <input type="file" id="from1"> <span id="from1_info"></span><br>
 <input type="file" id="from2"> <span id="from2_info"></span><br><br>
@@ -20,7 +16,7 @@
 <input type="file" id="to1"> <span id="to1_info"></span><br>
 <input type="file" id="to2"> <span id="to2_info"></span><br><br>
 <tr><td><td>
-<div style="float:right;text-align:right;margin-right:5em">
+<div style="float:right;text-align:right">
 <input type="reset"><br>
 <input type="button" id="download" value="Download" disabled>
 </div>
@@ -35,6 +31,8 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script src="lib/FileSaver.min.js"></script>
 <script>
+
+if (!FileReader) alert("This tool uses JavaScript features that don't appear to be supported by your browser. Please try a different browser.");
 
 var input = { 'from':null, 'to':null };
 var file_id = '';
@@ -189,7 +187,7 @@ $('form').on('reset', function() {
 	print_delta();
 });
 
-$('#download').on('click', function() {
+if (Blob && saveAs) $('#download').on('click', function() {
 	if (!str_out) { alert('Nothing to save!'); return; }
 	var f_type, f_name;
 	if ($('#jsonp').is(':checked')) {
@@ -201,5 +199,5 @@ $('#download').on('click', function() {
 	}
 	var blob = new Blob([str_out], {type: f_type + ';charset=utf-8'});
 	saveAs(blob, f_name);
-});
+}); else $('#download').css('display', 'none');
 </script>
