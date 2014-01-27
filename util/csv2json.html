@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CSV2JSON</title>
+
+<body>
+<h1>CSV to JSON(P) converter</h1>
+<p style="width:45em">Input should be a CSV formatted file, with field names on the first row. Result will be a JSON array of objects, optionally wrapped as a JavaScript variable.
+<p style="width:45em">Uses FileReader, FileSaver and Blob interface from the HTML5 File API, so may not work on all browsers.
+
+<p>
+<input type="file" id="file">
+<span id="info"></span><br><br>
+<label><input type="checkbox" id="pretty"> Pretty-print output</label><br>
+<label><input type="checkbox" id="jsonp" checked> Wrap with <tt>var <input type="text" id="js-var" placeholder="data"> = <i>JSON</i>;</tt></label><br><br>
+<input type="button" id="download" value="Download" disabled>
+<hr />
+<pre id="result" style="white-space: pre-wrap;"></pre>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="lib/jquery.csv-0.71.min.js"></script>
+<script src="lib/FileSaver.min.js"></script>
+<script>
+
+var data = null, str_out = '';
+
+function var_name() {
+	var v = $('#js-var').val() || $('#js-var').attr('placeholder') || 'unknown';
+	return v.trim().replace(/\W+/g, '_');
+}
+
+function parse_sub_arrays(data) {
+	for (var i in data) {
+		for (var j in data[i]) {
+			var n = j.match(/^([^.]+)\.(\d+)(\.([^.]+))?$/);
+			if (n) {
+				if (data[i][j] !== "") {
+					if (!Array.isArray(data[i][n[1]])) data[i][n[1]] = new Array();
+					var a = data[i][n[1]];
+					if (n[4]) {
+						if (typeof a[n[2]] != 'object') a[n[2]] = new Object();
+						a[n[2]][n[4]] = data[i][j];
+					} else {
+						a[n[2]] = data[i][j];
+					}
+				}
+				delete data[i][j];
+			} else {
+				n = j.match(/^([^.]+)\.([^.]+)$/);
+				if (n) {
+					if (data[i][j] !== "") {
+						if (typeof data[i][n[1]] != 'object') data[i][n[1]] = new Object();
+						data[i][n[1]][n[2]] = data[i][j];
+					}
+					delete data[i][j];
+				}
+			}
+		}
+	}
+}
+
+function print_data() {
+	var pretty_space = $('#pretty').is(':checked') && '  ';
+    str_out = JSON.stringify(data, null, pretty_space);
+	if (str_out && $('#jsonp').is(':checked')) {
+		str_out = 'var ' + var_name() + ' = ' + str_out + ';'
+	}
+
+    if (str_out) {
+		$('#result').html(str_out.replace(/</g, '&lt;'));
+		$('#download').removeAttr('disabled');
+	} else {
+		$('#result').html('JSON is empty!');
+		$('#download').attr('disabled', true);
+	}
+}
+
+var reader = new FileReader();
+reader.onload = function(event) {
+    data = $.csv.toObjects(event.target.result);
+    parse_sub_arrays(data);
+    print_data();
+};
+reader.onerror = function(event) {
+    $('#result').html("File could not be read! Code " + event.target.error.code);
+};
+
+$('input').on('change', function() {
+	if ((this.type == 'file') && $(this)[0].files.length) {
+		var f = $(this)[0].files[0];
+		$('#info').html("Type: " + f.type + ", Size: " + f.size + " bytes");
+		var f_name = f.name.replace(/\.[^.]*$/, "");
+		$('#js-var').attr('placeholder', f_name || 'data');
+		reader.readAsText(f);
+	} else {
+		print_data();
+	}
+});
+
+$('#download').on('click', function() {
+	if (!str_out) { alert('Nothing to save!'); return; }
+	var f_type, f_name;
+	if ($('#jsonp').is(':checked')) {
+		f_type = 'text/javascript';
+		f_ext = '.js';
+	} else {
+		f_type = 'application/json';
+		f_ext = '.json';
+	}
+	var blob = new Blob([str_out], {type: f_type + ';charset=utf-8'});
+	saveAs(blob, var_name() + f_ext);
+});
+
+</script>

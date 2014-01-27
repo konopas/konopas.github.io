@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>JSONP updates</title>
+
+<body>
+
+<h1>JSONP updates</h1>
+
+<p style="width:45em">This tool takes as input Javascript files that define variables such as <tt style="white-space:nowrap">var program = ...;</tt> and <tt style="white-space:nowrap">var people = ...;</tt> and generates an <tt>updates</tt> changeset, as specified by the <a href="http://konopas.org/data-fmt">KonOpas data format</a>.
+
+<form>
+<table style="width:45em">
+<tr><td align="right" valign="top" style="width:3em">From: <td>
+<input type="file" id="from1"> <span id="from1_info"></span><br>
+<input type="file" id="from2"> <span id="from2_info"></span><br><br>
+<tr><td align="right" valign="top">To: <td>
+<input type="file" id="to1"> <span id="to1_info"></span><br>
+<input type="file" id="to2"> <span id="to2_info"></span><br><br>
+<tr><td><td>
+<div style="float:right;text-align:right;margin-right:5em">
+<input type="reset"><br>
+<input type="button" id="download" value="Download" disabled>
+</div>
+<label><input type="checkbox" id="pretty"> Pretty-print output</label><br>
+<label><input type="checkbox" id="jsonp" checked> Wrap with <tt>var updates = ... ;</tt></label>
+</table>
+</form>
+
+<hr>
+<pre id="result" style="white-space: pre-wrap;"></pre>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="lib/FileSaver.min.js"></script>
+<script>
+
+var input = { 'from':null, 'to':null };
+var file_id = '';
+var str_out = '';
+
+function json_var_end(str, i0) {
+	if (str.length <= i0) return 0;
+	var b0 = str.charAt(i0), b1 = null;
+	switch (b0) {
+		case '"': b1 = '"'; break;
+		case '{': b1 = '}'; break;
+		case '[': b1 = ']'; break;
+		default:
+			var num_re = /-?(0|[1-9]\d*)(\.\d+)?([eE][-+]?\d+)?(?=[\s,;}\]]|$)/g;
+			num_re.lastIndex = i0;
+			var num_str = num_re.exec(str);
+			return (num_str && (num_str.index == i0)) ? i0 + num_str[0].length : 0;
+	}
+	var b_count = 1;
+	for (var i = i0 + 1, l = str.length; i < l; ++i) {
+		switch (str.charAt(i)) {
+			case '\\':
+				if (b0 == '"') ++i;
+				break;
+			case b1:
+				--b_count;
+				if (b_count == 0) return i + 1;
+				break;
+			case b0:
+				++b_count;
+				break;
+		}
+	}
+	return 0;
+}
+
+function jsonp_parse_vars(str) {
+	var r = {}, re = /\s*var\s+(\S+)\s*=\s*/g;
+	for (var v = re.exec(str); v; v = re.exec(str)) {
+		var v_end = json_var_end(str, re.lastIndex);
+		if (v_end) {
+			var v_str = str.slice(re.lastIndex, v_end);
+			//console.log('JSON for "' + v[1] + '":'); console.log(v_str);
+			r[v[1]] = JSON.parse(v_str);
+			re.lastIndex = v_end;
+		} else {
+			console.error('JSONP parse error with "'
+				+ str.slice(re.lastIndex, re.lastIndex + 20) + (str.length > re.lastIndex + 20 ? '...' : '')
+				+ '" at pos ' + re.lastIndex + ' of:');
+			console.log(str);
+		}
+	}
+	return r;
+}
+
+function delta(a, b, idx_var) {
+	if (a === b) return null;
+	if (a == null) return b;
+	if (b == null) return null;
+	if (typeof a !== typeof b) return b;
+	if (!idx_var && (a instanceof Array)) {
+		if (a.length != b.length) return b;
+		for (var i = 0; i < a.length; ++i) {
+			if (delta(a[i], b[i]) !== null) return b;
+		}
+		return null;
+	} else if (a instanceof Object) {
+		var d = {}, done = {};
+		for (var i in a) if (a.hasOwnProperty(i)) {
+			var idx = idx_var ? a[i][idx_var] : i;
+			var b_i = b.hasOwnProperty(i) ? b[i] : null;
+			if (idx_var && (!b_i || (b_i[idx_var] !== idx))) {
+				var f = b.filter(function(o){ return o[idx_var] == idx; });
+				b_i = (f && f.length == 1) ? f[0] : null;
+			}
+			if (b_i == null) {
+				if (a[i] !== null) d[idx] = null;
+			} else {
+				var d_i = delta(a[i], b_i, false);
+				if (d_i instanceof Object) {
+					for (var j in d_i) if (d_i.hasOwnProperty(j)) { d[idx] = d_i; break; }
+				} else if (d_i !== null) d[idx] = d_i;
+			}
+			done[idx] = true;
+		}
+		for (var i in b) if (b.hasOwnProperty(i)) {
+			var idx = idx_var ? b[i][idx_var] : i;
+			if (!done[idx]) {
+				d[idx] = b[i];
+				d[idx]['new'] = true;
+			}
+		}
+		for (var i in d) if (d.hasOwnProperty(i)) return d;
+		return null;
+	} else {
+		return (a == b) ? null : b;
+	}
+}
+
+function print_delta() {
+	if (!input['from'] || !input['to']) {
+		$('#result').html('');
+		return;
+	}
+
+	var r = {};
+	for (var i in input['from']) {
+		var d = delta(input['from'][i], input['to'][i], 'id');
+		r[i] = d;
+	}
+
+	var pretty_space = $('#pretty').is(':checked') && '  ';
+	str_out = JSON.stringify(r, null, pretty_space);
+	if (str_out && $('#jsonp').is(':checked')) str_out = 'var updates = ' + str_out + ';'
+    if (str_out) {
+		$('#result').html(str_out.replace(/</g, '&lt;'));
+		$('#download').removeAttr('disabled');
+	} else {
+		$('#result').html('JSON is empty!');
+		$('#download').attr('disabled', true);
+	}
+}
+
+var reader = new FileReader();
+reader.onload = function(ev) {
+	var raw_str = (ev || window.event).target.result;
+	var o = jsonp_parse_vars(raw_str);
+	if (!input[file_id]) input[file_id] = o;
+	else for (var i in o) input[file_id][i] = o[i];
+	print_delta();
+};
+reader.onerror = function(ev) {
+    $('#result').html("File read error! Code " + (ev || window.event).target.error.code);
+};
+
+$('input').on("change", function() {
+	if ((this.type == 'file') && $(this)[0].files.length) {
+		var f = $(this)[0].files[0];
+		$('#' + this.id + '_info').html("Type: " + f.type + ", Size: " + f.size + " bytes");
+		file_id = this.id.replace(/\d*$/, '');
+		reader.readAsText(f);
+	} else {
+		print_delta();
+	}
+});
+
+$('form').on('reset', function() {
+	input = { 'from':null, 'to':null };
+	str_out = '';
+	$('form span').html('');
+	$('#download').attr('disabled', true);
+	print_delta();
+});
+
+$('#download').on('click', function() {
+	if (!str_out) { alert('Nothing to save!'); return; }
+	var f_type, f_name;
+	if ($('#jsonp').is(':checked')) {
+		f_type = 'text/javascript';
+		f_name = 'updates.js';
+	} else {
+		f_type = 'application/json';
+		f_name = 'updates.json';
+	}
+	var blob = new Blob([str_out], {type: f_type + ';charset=utf-8'});
+	saveAs(blob, f_name);
+});
+</script>
