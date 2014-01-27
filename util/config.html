@@ -24,15 +24,11 @@
 <input type="button" id="reset" value="Reset">
 
 <div id="results">
-<div id="program">
 <h3>Initial filters to use for your <i>Program</i> view:</h3>
 <pre id="program-filters" class="filters">Loading...</pre>
-</div>
 
-<div id="people">
 <h3>Initial filters to use for your <i>People</i> view:</h3>
 <pre id="people-filters" class="filters">Loading...</pre>
-</div>
 </div>
 
 <script>
@@ -83,9 +79,76 @@ function parse_program() {
 	return r.join('\n');
 }
 
+function prev_matches(a, i) { return (i > 0) && (a[i - 1] == a[i]); }
+function next_matches(a, i) { return (i < a.length - 1) && (a[i + 1] == a[i]); }
+function letter_ranges(a, bin_size) {
+	a.sort();
+	var n_bins = Math.round(a.length / bin_size);
+	var ends = [];
+	for (var i = 1; i <= n_bins; ++i) {
+		var e = Math.round(i * a.length / n_bins), n_up = 0, n_down = 0;
+		if (e < 0) e = 0;
+		if (e >= a.length) e = a.length - 1;
+		while (next_matches(a, e + n_up)) ++n_up;
+		if (n_up) while (prev_matches(a, e - n_down)) ++n_down;
+		if (n_up <= n_down) e += n_up;
+		else if (e > n_down) e -= n_down + 1;
+		if (!ends.length || (ends[ends.length - 1] != a[e])) ends.push(a[e]);
+	}
+
+	var start = 'A';
+	for (var i = 0; i < ends.length; ++i) {
+		if (ends[i] < start) continue;
+		var c = ends[i].charCodeAt(0);
+		if (ends[i] > start) ends[i] = start + ends[i];
+		start = String.fromCharCode(c + 1);
+	}
+	return ends;
+}
+
 function parse_people() {
 	if (!people || !people.length) return null;
-	return null;
+	var r = [], bin_size = 60;
+
+	var fn = people
+		.filter(function(p){ return p.name && (p.name.length >= 1) && p.name[0].trim && p.name[0].trim(); })
+		.map(function(p){ return p.name[0].trim().charAt(0); });
+	var ln = people
+		.filter(function(p){ return p.name && (p.name.length >= 2) && p.name[1].trim && p.name[1].trim(); })
+		.map(function(p){ return p.name[1].trim().charAt(0); });
+	var nn, nr;
+	if (ln.length) {
+		nn = 'last';
+		nr = letter_ranges(ln, bin_size);
+	} else {
+		nn = 'first';
+		nr = letter_ranges(fn, bin_size);
+	}
+	if (nr.length > 1) {
+		r.push('<div id="part_filters" class="filters">');
+		r.push('» All participants by ' + nn + ' name:');
+		r.push('<ul id="name_range">');
+		for (var i = 0; i < nr.length; ++i) {
+			var s = '<li data-range="' + nr[i] + '">' + nr[i].charAt(0);
+			if (nr[i].length > 1) s += ' - ' + nr[i].charAt(1);
+			r.push(s);
+		}
+		r.push('</ul>');
+		r.push('</div>');
+	} else {
+		if (nr.length < 1) r.push('[Error parsing name ranges!]');
+	}
+	var nl_type =  fn.length &&  ln.length ? ''
+	            :  fn.length && !ln.length ? 'fn-only'
+	            : !fn.length &&  ln.length ? 'ln-only'
+	            : 'error';
+	switch (nl_type) {
+		case 'error': r.push('\n[Error parsing name list!]'); break;
+		case '': r.push('\n<ul id="part_names"></ul>'); break;
+		default: r.push('\n<ul id="part_names" class="' + nl_type + '"></ul>');
+	}
+	r.push('\n<div id="part_info"></div>');
+	return r.join('\n');
 }
 
 
