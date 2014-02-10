@@ -1,0 +1,118 @@
+---
+layout: default
+title: i18n.js generator
+---
+
+<h1>i18n.js generator</h1>
+
+<p>KonOpas uses <a href="https://github.com/SlexAxton/messageformat.js">messageformat.js</a> to enable internationalization. For each translated language, a JSON file composed of <tt>"key": "translation"</tt> lines is required, with the translations in <a href="http://icu-project.org/apiref/icu4j/com/ibm/icu/text/MessageFormat.html">ICU MessageFormat</a>.
+
+<p>This tool can process the JSON source into the JavaScript that's then included in <tt>konopas.min.js</tt>. If you want to do that locally, you'll need my <a href="https://github.com/eemeli/messageformat.js/releases/tag/konopas-2014-02-09">patched version of messageformat.js</a> (this may change). To compile a new <tt>konopas.min.js</tt>, save your JavaScript output as <tt>src/i18n.js</tt> and run <tt>./build.sh -j</tt> in the directory where you've installed KonOpas (requires <a href="http://curl.haxx.se/">cURL</a>).
+
+<p>To get started translating, <a href="en.json">here's the English version of the JSON file</a>. Note that this is a little different from the one included in KonOpas source, as that one has many of the simpler strings stripped out because in English their values are the same as the key, which is defaulted to if no translation is found.
+
+<form id="form">
+<table>
+<tr><td>JSON source: <td><input type="file" id="file">
+<tr><td>Locale: <td><select id="lc"><option value="--" selected>--
+<option value="af">af<option value="am">am<option value="ar">ar<option value="bg">bg<option value="bn">bn<option value="br">br
+<option value="ca">ca<option value="cs">cs<option value="cy">cy<option value="da">da<option value="de">de<option value="el">el
+<option value="en">en<option value="es">es<option value="et">et<option value="eu">eu<option value="fa">fa<option value="fi">fi
+<option value="fil">fil<option value="fr">fr<option value="ga">ga<option value="gl">gl<option value="gsw">gsw<option value="gu">gu
+<option value="he">he<option value="hi">hi<option value="hr">hr<option value="hu">hu<option value="id">id<option value="in">in
+<option value="is">is<option value="it">it<option value="iw">iw<option value="ja">ja<option value="kn">kn<option value="ko">ko
+<option value="lag">lag<option value="ln">ln<option value="lt">lt<option value="lv">lv<option value="mk">mk<option value="ml">ml
+<option value="mo">mo<option value="mr">mr<option value="ms">ms<option value="mt">mt<option value="nl">nl<option value="no">no
+<option value="or">or<option value="pl">pl<option value="pt">pt<option value="ro">ro<option value="ru">ru<option value="shi">shi
+<option value="sk">sk<option value="sl">sl<option value="sq">sq<option value="sr">sr<option value="sv">sv<option value="sw">sw
+<option value="ta">ta<option value="te">te<option value="th">th<option value="tl">tl<option value="tr">tr<option value="uk">uk
+<option value="ur">ur<option value="vi">vi<option value="zh">zh
+</select> <span class="meta">Select -- to determine from file name, if possible.</a>
+
+<tr><td><td><br>
+<input type="button" id="download" value="Download" disabled>
+</table>
+</form>
+<br>
+<hr>
+<br>
+<pre id="results"></pre>
+
+<script>var module = {};</script>
+<script src="../lib/FileSaver.min.js"></script>
+<script src="message_parser.js"></script>
+<script src="messageformat.js"></script>
+<script src="locales.js"></script>
+<script>
+
+var js_output = '', reader = new FileReader(), incl = (function() {
+	try {
+		var xmlHttp = new XMLHttpRequest(), incl_url = 'messageformat.include.js';
+		xmlHttp.open('GET', incl_url, false);
+		xmlHttp.send();
+		return xmlHttp.responseText.trim();
+	} catch (e) {
+	    document.getElementById('results').innerHTML = 'Error fetching ' + incl_url + ': ' + e;
+		return null;
+	}
+})();
+
+reader.onload = function(ev) {
+	var data, mf, fn = [],
+	    dl = document.getElementById('download'),
+	    res = document.getElementById('results'),
+	    lc = document.getElementById('lc') && document.getElementById('lc').value,
+	    lc_func = MessageFormat.locale[lc] && MessageFormat.locale[lc].toString();
+	dl.setAttribute('disabled', true);
+	if (!incl) { res.innerHTML = "Missing include definitions; aborting."; return; }
+	if (!lc_func) { res.innerHTML = "Error reading locale: " + (lc); return; }
+	try { data = JSON.parse(ev.target.result); }
+	catch (e) { res.innerHTML = "JSON parsing error: " + e; return; }
+	try { mf = new MessageFormat(lc); }
+	catch (e) { res.innerHTML = e; return; }
+
+	for (var k in data) fn.push('"'+k+'":'+ mf.precompile(mf.parse(data[k])));
+
+	js_output = [
+		'(function(){ window.i18n || (window.i18n = {})',
+		'var MessageFormat = { locale: {} };',
+		'MessageFormat.locale.' + lc + '=' + lc_func,
+		incl,
+		'window.i18n["' + lc + '"] = {',
+		fn.join(',\n') + '}',
+		'})();'
+	].join('\n');
+
+	res.innerHTML = js_output.replace(/</g, '&lt;')
+	dl.removeAttribute('disabled');
+};
+
+reader.onerror = function(ev) {
+	document.getElementById('results').innerHTML = "File could not be read! Code " + ev.target.error.code;
+};
+
+document.getElementById('form').onchange = function(ev) {
+	if (this.file.files.length) {
+		var f = this.file.files[0];
+		if (this.lc.selectedIndex == 0) {
+			var fn_lc = f.name.replace(/\.json$/, '')
+			for (var i = 0, l = this.lc.options.length; i < l; ++i) {
+				if (this.lc.options[i].value == fn_lc) { this.lc.selectedIndex = i; break; }
+			}
+		}
+		reader.readAsText(f);
+	}
+	(ev || window.event).preventDefault();
+}
+
+if (Blob && saveAs) document.getElementById('download').onclick = function() {
+	if (js_output) {
+		var blob = new Blob([js_output], {type: 'text/javascript;charset=utf-8'});
+		saveAs(blob, 'i18n.js');
+	} else {
+		alert('Nothing to save!');
+	}
+};
+else document.getElementById('download').style('display', 'none');
+
+</script>
