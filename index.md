@@ -5,22 +5,26 @@ title: KonOpas
 
 **KonOpas** is a mobile-friendly guide for conventions, with all sorts of spiffy features. It's free, open-source software distributed under the terms of the [ISC license](https://github.com/eemeli/konopas/blob/master/LICENSE.txt).
 
-The latest release is **[0.6.0](https://github.com/eemeli/konopas/releases/tag/0.6.0)**, which contains a number of updates from the version seen at [LoneStarCon 3](https://github.com/eemeli/konopas/releases/tag/LoneStarCon3), including access to a central server that allows sync'ing data between different browsers and devices, as well as full internationalization support.
+The latest release is **[0.6.1](https://github.com/eemeli/konopas/releases/tag/0.6.1)**, which features a number of updates, including access to a central server that allows sync'ing data between different browsers and devices, as well as full internationalization support. <span class="meta">(<a href="https://github.com/eemeli/konopas/blob/master/CHANGELOG.md">full changelog</a>)</span>
 
 The project is [hosted at GitHub](https://github.com/eemeli/konopas), and you might also be interested in the [project mailing list](https://groups.google.com/d/forum/konopas-dev), which you're welcome to join.
 
 We're hosting here the working document for the [JSON data schemes](/data-fmt).
 
-KonOpas has been used so far at least by the following events:
+KonOpas has been used so far by the following events:
 
-* [Boskone 51](http://szczesuil.com/konopas/)
-* [Arisia 2014](http://guide.2014.arisia.org/)
-* [Smofcon 31](http://dev.konopas.org/smofcon)
-* [Capclave 2013](http://www.capclave.org/capclave/capclave13/konopas/)
-* [Octocon 2013](http://www.octocon.com/app/)
-* [Fantastika 2013](http://fantastika2013.myconferenceplanning.org/guide/)
-* **[LoneStarCon 3](http://www.lonestarcon3.org/guide/), the 2013 Worldcon**
-* Readercon 24
-* [Finncon 2013](http://m.finncon.org/2013/)
-* [Westercon 66](http://www.westercon66.org/schedule/)
-* [Chicon 7](http://aut-web.hut.fi/c7), the 2012 Worldcon
+<ul class="twocol">
+<li><a href="http://2014.lunacon.org/guide/">Lunacon 2014</a>
+<li><a href="http://szczesuil.com/konopas/">Boskone 51</a>
+<li><a href="http://guide.2014.arisia.org/">Arisia 2014</a>
+<li><a href="http://dev.konopas.org/smofcon">Smofcon 31</a>
+<li><a href="http://www.capclave.org/capclave/capclave13/konopas/">Capclave 2013</a>
+<li><a href="http://www.octocon.com/app/">Octocon 2013</a>
+<li><a href="http://fantastika2013.myconferenceplanning.org/guide/">Fantastika 2013</a>
+<li><a href="http://www.lonestarcon3.org/guide/">LoneStarCon 3</a>, the 2013 Worldcon
+<li>Readercon 24
+<li><a href="http://m.finncon.org/2013/">Finncon 2013</a>
+<li><a href="http://www.westercon66.org/schedule/">Westercon 66</a>
+<li><a href="http://aut-web.hut.fi/c7">Chicon 7</a>, the 2012 Worldcon
+</ul>
+<br clear="all">
