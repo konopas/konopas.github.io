@@ -7,7 +7,7 @@ title: i18n.js generator
 
 <p>KonOpas uses <a href="https://github.com/SlexAxton/messageformat.js">messageformat.js</a> to enable internationalization. For each translated language, a JSON file composed of <tt>"key": "translation"</tt> lines is required, with the translations in <a href="http://icu-project.org/apiref/icu4j/com/ibm/icu/text/MessageFormat.html">ICU MessageFormat</a>.
 
-<p>This tool can process the JSON source into the JavaScript that's then included in <tt>konopas.min.js</tt>. If you want to do that locally, you'll need my <a href="https://github.com/eemeli/messageformat.js/releases/tag/konopas-2014-02-09">patched version of messageformat.js</a> (this may change). To compile a new <tt>konopas.min.js</tt>, save your JavaScript output as <tt>src/i18n.js</tt> and run <tt>./build.sh -j</tt> in the directory where you've installed KonOpas (requires <a href="http://curl.haxx.se/">cURL</a>).
+<p>This tool can process the JSON source into the JavaScript that's then included in <tt>konopas.min.js</tt>. If you want to do that locally, you'll need my <a href="https://github.com/eemeli/messageformat.js/tree/fill">patched version of messageformat.js</a> (this may change). To compile a new <tt>konopas.min.js</tt>, save your JavaScript output as <tt>i18n/i18n.js</tt> and run <tt>make prod</tt> in the directory where you've installed KonOpas (requires <a href="http://curl.haxx.se/">cURL</a>).
 
 <p>To get started translating, <a href="en.json">here's the English version of the JSON file</a>. Note that this is a little different from the one included in KonOpas source, as that one has many of the simpler strings stripped out because in English their values are the same as the key, which is defaulted to if no translation is found.
 
