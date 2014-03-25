@@ -3,7 +3,7 @@ layout: default
 title: KonOpas
 ---
 
-**KonOpas** is a mobile-friendly guide for conventions, with all sorts of spiffy features. It's free, open-source software distributed under the terms of the [ISC license](https://github.com/eemeli/konopas/blob/master/LICENSE.txt).
+**KonOpas** is a mobile-friendly guide for conventions, with all sorts of spiffy features. It's free, open-source software distributed under the terms of the [ISC license](http://en.wikipedia.org/wiki/ISC_license).
 
 The latest release is **[0.6.1](https://github.com/eemeli/konopas/releases/tag/0.6.1)**, which features a number of updates, including access to a central server that allows sync'ing data between different browsers and devices, as well as full internationalization support. <span class="meta">(<a href="https://github.com/eemeli/konopas/blob/master/CHANGELOG.md">full changelog</a>)</span>
 
