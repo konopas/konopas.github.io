@@ -15,6 +15,7 @@ KonOpas has been used so far by the following events:
 
 <ul class="twocol">
 <li><a href="http://2014.lunacon.org/guide/">Lunacon 2014</a>
+<li><a href="http://konferens2014.sfoe.eu/">SFÖ:s konferens 2014</a> (in Swedish)
 <li><a href="http://szczesuil.com/konopas/">Boskone 51</a>
 <li><a href="http://guide.2014.arisia.org/">Arisia 2014</a>
 <li><a href="http://dev.konopas.org/smofcon">Smofcon 31</a>
