@@ -14,18 +14,19 @@ We're hosting here the working document for the [JSON data schemes](/data-fmt).
 KonOpas has been used so far by the following events:
 
 <ul class="twocol">
-<li><a href="http://2014.lunacon.org/guide/">Lunacon 2014</a>
+<li><a href="http://schedulecx.continuum.org.au/">Continuum X</a>
 <li><a href="http://konferens2014.sfoe.eu/">SFÖ:s konferens 2014</a> (in Swedish)
-<li><a href="http://szczesuil.com/konopas/">Boskone 51</a>
+<li><a href="http://2014.lunacon.org/guide/">Lunacon 2014</a>
+<li>Boskone 51
 <li><a href="http://guide.2014.arisia.org/">Arisia 2014</a>
 <li><a href="http://dev.konopas.org/smofcon">Smofcon 31</a>
 <li><a href="http://www.capclave.org/capclave/capclave13/konopas/">Capclave 2013</a>
-<li><a href="http://www.octocon.com/app/">Octocon 2013</a>
-<li><a href="http://fantastika2013.myconferenceplanning.org/guide/">Fantastika 2013</a>
+<li>Octocon 2013
+<li>Fantastika 2013
 <li><a href="http://www.lonestarcon3.org/guide/">LoneStarCon 3</a>, the 2013 Worldcon
 <li>Readercon 24
 <li><a href="http://m.finncon.org/2013/">Finncon 2013</a>
 <li><a href="http://www.westercon66.org/schedule/">Westercon 66</a>
-<li><a href="http://aut-web.hut.fi/c7">Chicon 7</a>, the 2012 Worldcon
+<li>Chicon 7, the 2012 Worldcon
 </ul>
 <br clear="all">
