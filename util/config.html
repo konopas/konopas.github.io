@@ -7,7 +7,7 @@ title: KonOpas Configurator
 
 <style>
 tt { white-space: nowrap; }
-.filters { white-space: pre-wrap; }
+.filters, #script-errors { white-space: pre-wrap; }
 #results { display: none; }
 .config-results #results { display: block; }
 .data-error { padding: 1em; text-align: center; background: red; color: white; font-weight: bold; }
@@ -17,6 +17,8 @@ tt { white-space: nowrap; }
 <p>Please enter the URL for the file containing your <tt>var people = [...];</tt> and/or <tt>var program = [...];</tt> definitions:<br>
 <input type="text" id="url0" size="80" placeholder="http://...">
 <input type="submit" value="Read">
+
+<div id="script-errors"></div>
 
 <p>Roughly how many names per screenful of people?
 <input type="text" id="name_bin" size="3" placeholder="60">
@@ -197,6 +199,20 @@ document.getElementById('form').onsubmit = function(ev) {
 
 document.getElementById('tag_titles').onchange = print_filters;
 document.getElementById('name_bin').onchange = print_filters;
+
+window.onerror = function(msg, url, line, column, obj) {
+	if (/^Script error\./.test(msg)) {
+		msg += '\nCheck your browser console for more information.';
+	} else {
+		if (url) msg += '\nURL: ' + url;
+		if (line) msg += '\nLine: ' + line;
+		if (column) msg += ', Column: ' + column;
+		if (obj) msg += '\nStackTrace: ' + obj;
+	}
+	var el = document.getElementById('script-errors');
+	el.classList.add('data-error');
+	el.textContent = msg;
+}
 
 function init() {
 	if (document.location.hash.length > 1) {
