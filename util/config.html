@@ -10,6 +10,7 @@ tt { white-space: nowrap; }
 .filters { white-space: pre-wrap; }
 #results { display: none; }
 .config-results #results { display: block; }
+.data-error { padding: 1em; text-align: center; background: red; color: white; font-weight: bold; }
 </style>
 
 <form id="form">
@@ -117,7 +118,7 @@ function parse_people() {
 	var nn, nr, r = [],
 		bin_size = Number(document.getElementById('name_bin').value) || 60,
 		string_names = people.filter(function(p){ return p.name && (typeof p.name == 'string'); });
-	if (string_names.length) return "Error parsing `var people`: `name` should be an array, not a string.";
+	if (string_names.length) return "[Error parsing `var people`: `name` should be an array, not a string.]";
 
 	var fn = people
 		.filter(function(p){ return p.name && (p.name.length >= 1) && p.name[0].trim && p.name[0].trim(); })
@@ -162,8 +163,13 @@ function parse_people() {
 }
 
 function print_filters() {
-	document.getElementById('program-filters').textContent = parse_program() || '[No program data found]';
-	document.getElementById('people-filters').textContent = parse_people() || '[No people data found]';
+	var err_re = /^\[Error/,
+		prog_filt = document.getElementById('program-filters'),
+		ppl_filt = document.getElementById('people-filters');
+	prog_filt.textContent = parse_program() || '[No program data found]';
+	prog_filt.classList[err_re.test(prog_filt.textContent) ? 'add' : 'remove']('data-error');
+	ppl_filt.textContent = parse_people() || '[No people data found]';
+	ppl_filt.classList[err_re.test(ppl_filt.textContent) ? 'add' : 'remove']('data-error');
 }
 
 function load_script(url) {
