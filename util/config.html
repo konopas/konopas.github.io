@@ -114,14 +114,17 @@ function letter_ranges(a, bin_size) {
 
 function parse_people() {
 	if (!people || !people.length) return null;
-	var r = [], bin_size = Number(document.getElementById('name_bin').value) || 60;
+	var nn, nr, r = [],
+		bin_size = Number(document.getElementById('name_bin').value) || 60,
+		string_names = people.filter(function(p){ return p.name && (typeof p.name == 'string'); });
+	if (string_names.length) return "Error parsing `var people`: `name` should be an array, not a string.";
+
 	var fn = people
 		.filter(function(p){ return p.name && (p.name.length >= 1) && p.name[0].trim && p.name[0].trim(); })
-		.map(function(p){ return p.name[0].trim().charAt(0); });
+		.map(function(p){ return p.name[0].trim().charAt(0).toUpperCase(); });
 	var ln = people
 		.filter(function(p){ return p.name && (p.name.length >= 2) && p.name[1].trim && p.name[1].trim(); })
-		.map(function(p){ return p.name[1].trim().charAt(0); });
-	var nn, nr;
+		.map(function(p){ return p.name[1].trim().charAt(0).toUpperCase(); });
 	if (ln.length) {
 		nn = 'last';
 		nr = letter_ranges(ln, bin_size);
