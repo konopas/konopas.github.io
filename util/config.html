@@ -68,7 +68,7 @@ function parse_program() {
 		r.push('');
 		r.push('<ul id="area">');
 		r.push('<li id="all_areas">Everywhere');
-		r = r.concat.apply(r, areas[i].map(function(a) { return '<li id="' + a + '">' + a; }));
+		r = r.concat.apply(r, areas[i].map(function(a) { return '<li id="' + (/^[0-9]/.test(a) ? 'a' + a : a) + '">' + a; }));
 		r.push('</ul>');
 	}
 
