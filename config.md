@@ -5,7 +5,7 @@ title: Configuration
 
 KonOpas is controlled and configured by setting values in a `konopas_set` array before including the `konopas.min.js` file. The only required field is `id`, a unique alphanumeric identifier for each particular instance of the guide, like `finncon2014`. Everything else has decent default values.
 
-A slightly more complex `konopas_set` definition is included below, tailored to the sample data included with KonOpas.
+A slightly more complex `konopas_set` definition is included below, tailored to the sample data included with KonOpas. For a full list of the available parameters and their default values, take a look at the [src/app.js](https://github.com/eemeli/konopas/blob/master/src/app.js) file.
 
 <br>
 
