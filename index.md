@@ -9,11 +9,14 @@ The latest release is **[0.7.0](https://github.com/eemeli/konopas/releases/lates
 
 The project is [hosted at GitHub](https://github.com/eemeli/konopas), and you might also be interested in the [project mailing list](https://groups.google.com/d/forum/konopas-dev), which you're welcome to join.
 
-We're hosting here the working document for the [program.js and people.js data schemes](/data-fmt), and a guide to [configuring KonOpas](/config).
+We're hosting here the specification for the program.js and people.js [data schemes](/data-fmt), and a guide to [configuring KonOpas](/config).
 
 KonOpas has been used so far by the following events, as well as others:
 
 <ul class="twocol">
+<li><a href="http://guide.loncon3.org/">Loncon 3</a>, the 2014 Worldcon
+<li><a href="http://konopas.detcon1.org/">Detcon1</a>, the 2014 NASFiC
+<li><a href="http://westercon67.org/guide/">Westercon 67</a>
 <li><a href="http://m.finncon.org/2014">Finncon 2014</a> (in Finnish and English)
 <li><a href="http://readercon.net/guide">Readercon 25</a>
 <li><a href="http://schedulecx.continuum.org.au/">Continuum X</a>
@@ -32,3 +35,5 @@ KonOpas has been used so far by the following events, as well as others:
 <li>Chicon 7, the 2012 Worldcon
 </ul>
 <br clear="all">
+
+If you'd like to support KonOpas financially, at this time I'd encourage you to direct that support towards the [**Helsinki in 2017**](http://www.helsinkiin2017.org/) Worldcon bid.
