@@ -5,11 +5,11 @@ title: KonOpas
 
 **KonOpas** is a mobile-friendly guide for conventions, with all sorts of spiffy features. It's free, open-source software distributed under the terms of the [ISC license](http://en.wikipedia.org/wiki/ISC_license).
 
-The latest release is **[0.7.0](https://github.com/eemeli/konopas/releases/latest)**, which adds automatic filter generators and adds a new "Next" option when filtering programme data. Other relatively recent features have included access to a central server that allows sync'ing data between different browsers and devices, and full internationalization support. <span class="meta">(<a href="https://github.com/eemeli/konopas/blob/master/CHANGELOG.md">full changelog</a>)</span>
+The latest release is **[0.8.0](https://github.com/eemeli/konopas/releases/latest)**, which adds second-level items to the "Programme" and "People" menus, as well as hiding past events by default when viewed during the event. Other relatively recent features have included access to a central server that allows sync'ing data between different browsers and devices, full internationalization support, and automatic filter generators. <span class="meta">(<a href="https://github.com/eemeli/konopas/blob/master/CHANGELOG.md">full changelog</a>)</span>
 
 The project is [hosted at GitHub](https://github.com/eemeli/konopas), and you might also be interested in the [project mailing list](https://groups.google.com/d/forum/konopas-dev), which you're welcome to join.
 
-We're hosting here the specification for the program.js and people.js [data schemes](/data-fmt), and a guide to [configuring KonOpas](/config).
+We're hosting here the specification for the program.js and people.js [data schemes](/data-fmt), and a guide to [configuring KonOpas](/config). A cutting-edge and occasionally-broken development instance of KonOpas is available at [dev.konopas.org](http://dev.konopas.org).
 
 KonOpas has been used so far by the following events, as well as others:
 
