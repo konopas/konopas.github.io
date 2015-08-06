@@ -11,28 +11,25 @@ The project is [hosted at GitHub](https://github.com/eemeli/konopas), and you mi
 
 We're hosting here the specification for the program.js and people.js [data schemes](/data-fmt), and a guide to [configuring KonOpas](/config). A cutting-edge and occasionally-broken development instance of KonOpas is available at [dev.konopas.org](http://dev.konopas.org).
 
-KonOpas has been used so far by the following events, as well as others:
+KonOpas has been used so far by at least the following events, as well as others:
 
 <ul class="twocol">
+<li><a href="https://nineworlds.co.uk/sites/nineworlds.co.uk/2015-schedule/">Nine Worlds 2015</a>
+<li><a href="http://www.archipelacon.org/mobile/">Archipelacon 2015</a>
+<li><a href="http://readercon.net/guide">Readercon 26</a>
 <li><a href="http://guide.loncon3.org/">Loncon 3</a>, the 2014 Worldcon
 <li><a href="http://konopas.detcon1.org/">Detcon1</a>, the 2014 NASFiC
 <li><a href="http://westercon67.org/guide/">Westercon 67</a>
 <li><a href="http://m.finncon.org/2014">Finncon 2014</a> (in Finnish and English)
-<li><a href="http://readercon.net/guide">Readercon 25</a>
 <li><a href="http://schedulecx.continuum.org.au/">Continuum X</a>
 <li><a href="http://konferens2014.sfoe.eu/">SFÖ:s konferens 2014</a> (in Swedish)
 <li><a href="http://2014.lunacon.org/guide/">Lunacon 2014</a>
-<li>Boskone 51
 <li><a href="http://guide.2014.arisia.org/">Arisia 2014</a>
 <li><a href="http://dev.konopas.org/smofcon">Smofcon 31</a>
 <li><a href="http://www.capclave.org/capclave/capclave13/konopas/">Capclave 2013</a>
-<li>Octocon 2013
-<li>Fantastika 2013
 <li><a href="http://www.lonestarcon3.org/guide/">LoneStarCon 3</a>, the 2013 Worldcon
-<li>Readercon 24
 <li><a href="http://m.finncon.org/2013/">Finncon 2013</a>
 <li><a href="http://www.westercon66.org/schedule/">Westercon 66</a>
-<li>Chicon 7, the 2012 Worldcon
 </ul>
 <br clear="all">
 
